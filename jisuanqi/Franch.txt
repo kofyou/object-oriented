@@ -1,0 +1,6 @@
+Saisissez 1e nombre
+Bingo!
+Mauvaise r¨¦ponse.
+Nombre de probl¨¨mes
+Nombre de r¨¦ponses de test
+Le nombre de mailles de mal
