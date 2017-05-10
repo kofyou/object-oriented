@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<time.h>
 #include<iostream>
+#include "myfunction.h" 
 using namespace std; 
 int fenzi,fenmu;
 int ans;//special=0;
