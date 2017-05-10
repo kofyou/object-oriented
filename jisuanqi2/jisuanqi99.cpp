@@ -4,38 +4,87 @@
 #include<time.h>
 #include<iostream>
 using namespace std; 
-int fenzi,fenmu;     
-int ans,special=0;
-int choice,num;
-int n[5];                     //随机数
-int op[4];                    //随机符号序号 
-char operation[4]={'+','-','*','/'};
-int circum;                   //括号的位置case 
-int casemu0;                  //分母为零时 
-int score=0;                  //计数成绩 
+int fenzi,fenmu;
+int ans;//special=0;
+int choice;
+int casemu0;                           
+/*
+  功能：读取题目数量 
+*/
+char * readFile(char *c,char *ch)
+{
+	char in[1000];
+	strcpy(in,c);
+	char temp; 
+	int i=0;
+	FILE * p;
+	if((p=fopen(in,"r"))==NULL)
+	printf("cant find");
+	while(!feof(p))
+	{
+		temp=fgetc(p);
+		ch[i]=temp;
+		i++;
+	}
+	fclose(p);
+	return ch;
+}
+
+
+/*
+  功能：结果保存在文件里 
+*/
+void writeFile(int num,char *a,char *ch,char cans[][100],char input[][100],char shizi[][1000])
+{
+	int j;
+	char out[1000];
+	strcpy(out,a);
+	FILE * q;
+	if((q=fopen(out,"w"))==NULL)
+	printf("cant find");
+	fputs("题目数量：",q);
+	fputs(ch,q);
+	fputc('\n',q);
+	for(j=1;j<=num;j++)
+	{
+		fputs(shizi[j],q);
+		fputs("\n",q);
+		fputs(input[j],q);
+		fputs("\n",q);
+		fputs(cans[j],q);
+		fputs("\n\n",q);
+	}
+	fclose(q);
+}
+
+
 /*
   功能：菜单 
 */
 void Menu()
 {
+	
 	cout<<"---------------------------------------------------------------------------------\n";
 	cout<<"*****************Welcome to use the arithmetic device for pupils!****************\n";
 	cout<<"*******        1Chinese  2English  3Japanese  4Franch  5German       **********\n";
 	cout<<"---------------------------------------------------------------------------------\n\n";
 }
+
+
 /*
   功能：不同语言输出
 */ 
 void lan(int a,int b)
 {
 	char language[1000]; 
-	if(a==1) strcpy(language,"Chinese.txt");
-	if(a==2) strcpy(language,"English.txt");
-	if(a==3) strcpy(language,"Japanese.txt");
-	if(a==4) strcpy(language,"Franch.txt");
-	if(a==5) strcpy(language,"German.txt");
+	if(a==1) strcpy(language,"D:\\github\\object-oriented1\\jisuanqi2\\Chinese.txt");
+	if(a==2) strcpy(language,"D:\\github\\object-oriented1\\jisuanqi2\\English.txt");
+	if(a==3) strcpy(language,"D:\\github\\object-oriented1\\jisuanqi2\\Japanese.txt");
+	if(a==4) strcpy(language,"D:\\github\\object-oriented1\\jisuanqi2\\Franch.txt");
+	if(a==5) strcpy(language,"D:\\github\\object-oriented1\\jisuanqi2\\German.txt");
 	int line=1;
-	FILE * p=fopen(language,"r");
+	FILE * p;
+	if((p=fopen(language,"r"))==NULL)printf("fuck\n");
 	char StrLine[100];
 	while(!feof(p))
 	{
@@ -49,60 +98,82 @@ void lan(int a,int b)
 	}
 	fclose(p);
 }
+
+
 /*
   功能：随机生成算式 
 */ 
-void randomNumber()
+void randomNumber(int *n)
 {
 	srand(time(NULL));
 	n[1]=rand()%11;n[2]=rand()%11;n[3]=rand()%11;n[4]=rand()%11;
-} 
-void randomOperation()
+}
+
+
+/*
+  功能：生成随机运算符 
+*/ 
+void randomOperation(int *op)
 {
 	srand(time(NULL));
 	op[1]=rand()%4;op[2]=rand()%4;op[3]=rand()%4;	
 } 
-void generateExpression()
+
+
+/*
+  功能：生成算式 
+*/
+void generateExpression(int i,int circum,int *n,int *op,char shizi[][1000])
 {
+	
+	char operation[4]={'+','-','*','/'};
 	switch(circum) 
 	{
 		case 0:
 		{
 			cout<<n[1]<<operation[op[1]]<<n[2]<<operation[op[2]]<<n[3]<<operation[op[3]]<<n[4]<<'='; 
+			sprintf(shizi[i],"%d%c%d%c%d%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;  	
 		}
 		case 1:
 		{
 			cout<<'('<<n[1]<<operation[op[1]]<<n[2]<<')'<<operation[op[2]]<<n[3]<<operation[op[3]]<<n[4]<<'='; 
+			sprintf(shizi[i],"(%d%c%d)%c%d%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 2:
 		{
 			cout<<n[1]<<operation[op[1]]<<'('<<n[2]<<operation[op[2]]<<n[3]<<')'<<operation[op[3]]<<n[4]<<'='; 
+			sprintf(shizi[i],"%d%c(%d%c%d)%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 3:
 		{	
 			cout<<n[1]<<operation[op[1]]<<n[2]<<operation[op[2]]<<'('<<n[3]<<operation[op[3]]<<n[4]<<')'<<'='; 
+			sprintf(shizi[i],"%d%c%d%c(%d%c%d)=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 4:
 		{  
 			cout<<'('<<n[1]<<operation[op[1]]<<n[2]<<operation[op[2]]<<n[3]<<')'<<operation[op[3]]<<n[4]<<'='; 
+			sprintf(shizi[i],"(%d%c%d%c%d)%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 5:
 		{ 
 			cout<<n[1]<<operation[op[1]]<<'('<<n[2]<<operation[op[2]]<<n[3]<<operation[op[3]]<<n[4]<<')'<<'='; 
+			sprintf(shizi[i],"%d%c(%d%c%d%c%d)=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 		}
 	}
 }
+
+
 /*
   功能：计算答案 
 */ 
-void calculateResult()
+int calculateResult(int *n,int *op,char cans[][100],int i)
 {
-	
+	int circum;  
 	srand(time(NULL));
 	circum=rand()%5;
 	int chengchu1(int n[5],int op[4]);  
@@ -111,7 +182,7 @@ void calculateResult()
 	int chengchu4(int n[5],int op[4]);  
 	int chengchu5(int n[5],int op[4]);  
 	int chengchu6(int n[5],int op[4]); 
-	casemu0=0; 
+	//casemu0=0; 
 	switch(circum)
 	{
 		case 0:
@@ -143,23 +214,53 @@ void calculateResult()
 		{
 			ans=chengchu6(n,op); 
 		}
+		
+	}
 		if(ans==10002)
 		{
 			casemu0=1;
 		}
-	}
+		if(ans!=10002&&ans!=10001)
+		{
+			sprintf(cans[i],"%d",ans);	
+		}
+		if(ans==10001)
+		{
+			sprintf(cans[i],"%d/%d",fenzi,fenmu);
+		}
+		return circum;
+		
 }
+
+
+
 /*
   功能：用户输入答案并判断
 */ 
-int scan()
+int scan(char input[][100],char cans[][100],int i)
 {
 	void lan(int a,int b);
 	int userans=10003;
 	int userfenzi=10003;                            
 	int userfenmu; 
 	char chuhao;  
-	if(ans==10001)                                //change       根据有没有分数运算 有不同的用户输入和程序输出 
+	scanf("%s",input[i]);
+	if(strcmp(input[i],cans[i])==0)
+	{
+		lan(choice,2);
+		return 1;
+	}
+	else if(input[i][0]=='e')
+	{
+		return 3;
+	}
+	else
+	{
+		lan(choice,3);
+		printf("%s\n",cans[i]);
+		return 0;
+	}
+	/*if(ans==10001)                                //change       根据有没有分数运算 有不同的用户输入和程序输出 
    	{
    		scanf("%d%c",&userfenzi,&chuhao);
    		if(userfenzi==10003)
@@ -222,8 +323,11 @@ int scan()
 			printf("%d\n",ans);
    	    	return 0;
 		}
-   	}
+   	}*/
 } 
+
+
+
 /*
 蠢方法算计算答案
 */ 
@@ -543,7 +647,7 @@ int chengchu1(int n[5],int op[4])
 	if(flag==1)               //根据是否有分数计算  返回不同值 
 	return 10001; 
 	if(flag==0)
-	return ans;	
+	return ans;
 	if(flag==2)
 	return 10002;
 }
@@ -2157,6 +2261,9 @@ int chengchu6( int n[5],int op[4])
 	if(flag==2)
 	return 10002;	
 }
+
+
+
 /*
 分数化简函数
 */
@@ -2164,7 +2271,7 @@ int fenshuhuajian()
 {
 	int common(int m,int n);       //计算最大公因数 
 	int yinshu;
-	if(fenmu==0)
+	/*if(fenmu==0)
 	{
 		randomNumber();
 		randomOperation();
@@ -2175,8 +2282,8 @@ int fenshuhuajian()
 			special+=scan();
 		}
 		return 2;	
-	} 
-	else if(fenzi==0)                        //分数为0 
+	} */
+	/*else*/ if(fenzi==0)                        //分数为0 
 	{
 		ans=0;
 		return 0;
@@ -2224,10 +2331,10 @@ int common(int m,int n)
 /*
   功能：输出统计结果
 */ 
-void print(int num,int i,int a)
+void print(int num,int i,int a,int score)
 {
 	void lan(int a,int b);
-	score=score+special;
+	score=score;//+special;
 	lan(choice,4);
 	cout<<i;
 	lan(choice,5);
@@ -2235,6 +2342,9 @@ void print(int num,int i,int a)
 	lan(choice,6);
 	cout<<i-score;
 }
+
+
+
 /*
   功能：语言选择、题量选择 
 */ 
@@ -2253,32 +2363,45 @@ void choose()
 		cin>>choice; 
 	}
 	lan(choice,1);
-	cin>>num;
-	cout<<"\n";
+	cout<<endl;
 }
+
+
+
 /*
   功能：主函数
 */ 
-int main()
+int main(int argc,char *argv[])
 {
+	int n[5];
+	int op[4];
 	int i,point;
+	int score=0;  
+	int num;
+	int circum;  
+	char ch[10];
+	char cans[100][100];
+	char input[100][100];
+	char shizi[100][1000];
 	choose();           //选择语言题量 
+	num=atoi(readFile(argv[1],ch));
 	for(i=1;i<=num;i++)
 	{ 
-		randomNumber();
-		randomOperation();
-		calculateResult();
+		randomNumber(n);
+		randomOperation(op);
+		circum=calculateResult(n,op,cans,i);
 		if(casemu0!=1) 
 		{
-			generateExpression();
-			point=scan();
+			generateExpression(i,circum,n,op,shizi);
+			point=scan(input,cans,i);
 			if(point==3)
 				break;
 			else
 				score+=point;
 		}
 	}
-	print(num,i,choice);
+	writeFile(num,argv[2],ch,cans,input,shizi); 
+	print(num,i-1,choice,score);
 	return 0;
 }
 
