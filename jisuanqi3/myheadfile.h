@@ -10,12 +10,12 @@ class user
 		int choseLanguage();                //选择语言 
 		int readFile();                     //读取题目数量 
 		void scan();                        //获取用户输入答案 
+		friend int compareAnswer();         //声明友元函数 
+		friend void writeFile();            //声明友元函数 
 	private:
 		int lan;                            //语言 
 		int n;                              //题目数量 
 		string userans[100];                //用户输入的答案 
-		friend int compareAnswer();         //声明友元函数 
-		friend void writeFile();            //声明友元函数 
 };
 
 
