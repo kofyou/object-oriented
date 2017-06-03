@@ -33,8 +33,7 @@ class equation
 		void randomOperation();	            //生成随机运算符 
 		void randomCircum();                  //生成随机括号位置 
 		void generateExpression();          //生成表达式 
-		string midtoback();
-		void caculateResult();              //计算答案 
+		int caculateResult();              //计算答案 
 		friend int compareAnswer(user &,equation&);         //声明友元函数
 		friend void writeFile(user &,equation&,char *);            //声明友元函数 
 	private:

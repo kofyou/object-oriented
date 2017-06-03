@@ -16,7 +16,7 @@ int main(int argc,char *argv[])
 		t.randomNumber();          //生成随机数 
 		t.randomOperation();       //生成随机操作符 
 		t.generateExpression();    //生成算式 
-		t.caculateResult();        //计算正确答案 
+		if(t.caculateResult()==0)continue;
 		u.scan();                  //获取用户输入 
 		point+=compareAnswer(u,t);        //友元函数 用于比较正确答案与用户答案 
 		writeFile(u,t,argv[2]);            //友元函数  将结果写入指定文件 

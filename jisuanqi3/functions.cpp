@@ -56,7 +56,7 @@ void user::scan()
 void equation::randomNumber()
 {
 	srand(time(NULL));
-	n[1]=rand()%11;n[2]=rand()%11;n[3]=rand()%11;n[4]=rand()%11;
+	n[1]=rand()%10;n[2]=rand()%10;n[3]=rand()%10;n[4]=rand()%10;
 }
 
 void equation::randomOperation()
@@ -80,89 +80,40 @@ void equation::generateExpression()
 		case 0:
 		{
 			cout<<n[1]<<operation[op[1]]<<n[2]<<operation[op[2]]<<n[3]<<operation[op[3]]<<n[4]<<'='; 
-			sprintf(suanshi,"%d%c%d%c%d%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
+			sprintf(suanshi,"%d%c%d%c%d%c%d",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;  	
 		}
 		case 1:
 		{
 			cout<<'('<<n[1]<<operation[op[1]]<<n[2]<<')'<<operation[op[2]]<<n[3]<<operation[op[3]]<<n[4]<<'='; 
-			sprintf(suanshi,"(%d%c%d)%c%d%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
+			sprintf(suanshi,"(%d%c%d)%c%d%c%d",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 2:
 		{
 			cout<<n[1]<<operation[op[1]]<<'('<<n[2]<<operation[op[2]]<<n[3]<<')'<<operation[op[3]]<<n[4]<<'='; 
-			sprintf(suanshi,"%d%c(%d%c%d)%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
+			sprintf(suanshi,"%d%c(%d%c%d)%c%d",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 3:
 		{	
 			cout<<n[1]<<operation[op[1]]<<n[2]<<operation[op[2]]<<'('<<n[3]<<operation[op[3]]<<n[4]<<')'<<'='; 
-			sprintf(suanshi,"%d%c%d%c(%d%c%d)=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
+			sprintf(suanshi,"%d%c%d%c(%d%c%d)",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 4:
 		{  
 			cout<<'('<<n[1]<<operation[op[1]]<<n[2]<<operation[op[2]]<<n[3]<<')'<<operation[op[3]]<<n[4]<<'='; 
-			sprintf(suanshi,"(%d%c%d%c%d)%c%d=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
+			sprintf(suanshi,"(%d%c%d%c%d)%c%d",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 			break;
 		}
 		case 5:
 		{ 
 			cout<<n[1]<<operation[op[1]]<<'('<<n[2]<<operation[op[2]]<<n[3]<<operation[op[3]]<<n[4]<<')'<<'='; 
-			sprintf(suanshi,"%d%c(%d%c%d%c%d)=",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
+			sprintf(suanshi,"%d%c(%d%c%d%c%d)",n[1],operation[op[1]],n[2],operation[op[2]],n[3],operation[op[3]],n[4]);
 		}
 	}
 	expression=string(suanshi);
-}
-
-void equation::caculateResult()
-{
-	char backsz[100];
-	string midtoback(string,char *);
-	string backexp;
-	midtoback(expression,backsz);
-	backexp=string(backsz);
-	int len=backexp.size();
-	char temp;
-	std::stack<char> st;
-	for(int i=0;i<len;i++)
-	{
-		temp=backexp[i];
-		if(temp>=48&&temp<=57)
-		{
-			st.push(temp);
-		}
-		else
-		{
-			char num1,num2,newnum;
-			num1=st.top();
-			st.pop();
-			num2=st.top();
-			st.pop();
-			if(temp=='+')
-			{
-				newnum=num1+num2-'0';
-				st.push(newnum);
-			}
-			else if(temp=='-')
-			{
-				newnum=num1-num2+'0';
-				st.push(newnum);
-			}
-			else if(temp=='*')
-			{
-				newnum=(num1-'0')*(num2-'0')+'0';
-				st.push(newnum);
-			}
-			else
-			{
-				newnum=(num1-'0')/(num2-'0')+'0';
-				st.push(newnum);
-			}
-		}
-	}
-	ans=st.top();
 }
 
 bool isadvancer(char a,char b)
@@ -192,7 +143,6 @@ void midtoback(string exp,char expsz[100])
 	int len=exp.size();
 	char temp;
 	string backexp;
-	
 	
 	
 	for(i=0;i<len;i++)
@@ -230,15 +180,81 @@ void midtoback(string exp,char expsz[100])
 	}
 	while (st.empty()==false)
     {
-        backexp[j]=st.top();
-        j++;
+        backexp[j++]=st.top();
         st.pop();
     }
     backexp[j]=0;
-	
+    
+    
+
 	
 	strcpy(expsz,backexp.c_str());
+		
 }
+
+
+int equation::caculateResult()
+{
+	char backsz[100];
+	
+	string backexp;
+	
+	midtoback(expression,backsz);
+	backexp=string(backsz);
+	int len=backexp.size();
+	char temp;
+	std::stack<char> st;
+	for(int i=0;i<len;i++)
+	{
+		temp=backexp[i];
+		if(temp>=48&&temp<=57)
+		{
+			st.push(temp-'0');
+		}
+		else
+		{
+			char num1,num2;
+			int newnum;
+			num1=st.top();
+			st.pop();
+			num2=st.top();
+			st.pop();
+			if(temp=='+')
+			{
+				newnum=num1+num2;
+				st.push(newnum);
+			}
+			else if(temp=='-')
+			{
+				newnum=num2-num1;
+				st.push(newnum);
+			}
+			else if(temp=='*')
+			{
+				newnum=num1*num2;
+				st.push(newnum);
+			}
+			else
+			{
+				if(num1==0)
+				{
+					ans="error";
+					cout<<ans<<endl;
+					return 0;
+				}
+				newnum=num2/num1;
+				st.push(newnum);
+			}
+		}
+	}
+	int intans;
+	intans=st.top();
+	char charans[10];
+	sprintf(charans,"%d",intans);
+	ans=string(charans);
+	return 1;
+}
+
 
 
 void lan(int a,int b)
@@ -276,7 +292,7 @@ int compareAnswer(user &uu,equation &tt)
 	else
 	{
 		lan(uu.lan,3);
-		cout<<tt.ans<<endl;
+		cout<<tt.ans<<endl<<endl;
 		return 0;
 	}
 }
@@ -287,7 +303,7 @@ void writeFile(user &uu,equation &tt,char *a)
 	char ch[10];
 	strcpy(out,a);
 	FILE * q;
-	if((q=fopen(out,"w"))==NULL)
+	if((q=fopen(out,"a"))==NULL)
 	printf("cant find");
 	fputs("题目数量：",q);
 	sprintf(ch,"%d",uu.n);
